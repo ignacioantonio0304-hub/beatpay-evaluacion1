@@ -25,3 +25,22 @@ Sistema de pagos digital y tarjeta virtual estilo Visa orientado a la administra
 * **Backend:** Python, Django framework.
 * **Frontend / UI:** HTML5, Tailwind CSS.
 * **Arquitectura:** Datos simulados (*Mock Data*) en memoria.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
