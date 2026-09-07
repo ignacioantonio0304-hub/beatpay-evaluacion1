@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Tarjeta - BeatPay Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white min-h-screen">
+    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
+        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
+        <a href="{% url 'dashboard' %}" class="text-sm bg-[#282828] px-4 py-2 rounded hover:bg-[#383838]">← Volver al Dashboard</a>
+    </nav>
+    <div class="max-w-2xl mx-auto mt-10 p-6 bg-[#181818] rounded-xl border border-[#282828]">
+        <h1 class="text-2xl font-bold mb-6 text-[#1DB954]">Detalle de Tarjeta Virtual Visa</h1>
+        <div class="space-y-4 text-gray-300">
+            <p><strong>Número de Tarjeta:</strong> <span class="font-mono text-white">{{ tarjeta.numero }}</span></p>
+            <p><strong>Tipo de Cuenta:</strong> <span class="text-white">{{ tarjeta.tipo }}</span></p>
+            <p><strong>Estado Actual:</strong> <span class="text-green-400 font-bold">{{ tarjeta.estado }}</span></p>
+            <p><strong>Saldo Disponible:</strong> <span class="text-xl font-bold text-[#1DB954]">${{ tarjeta.saldo }} CLP</span></p>
+            <p><strong>Límite Diario de Compra en Conciertos:</strong> <span class="text-white">$200.000 CLP</span></p>
+        </div>
+    </div>
+</body>
+</html>

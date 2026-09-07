@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Pagos - BeatPay Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white min-h-screen">
+    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
+        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
+        <a href="{% url 'dashboard' %}" class="text-sm bg-[#282828] px-4 py-2 rounded hover:bg-[#383838]">← Volver al Dashboard</a>
+    </nav>
+    <div class="max-w-4xl mx-auto mt-10 p-6">
+        <h1 class="text-3xl font-bold mb-6">Historial de Transacciones</h1>
+        <div class="bg-[#181818] rounded-xl border border-[#282828] overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#222222] text-gray-400 text-sm border-b border-[#282828]">
+                        <th class="p-4">Tipo</th>
+                        <th class="p-4">Detalle / Comercio</th>
+                        <th class="p-4">Fecha</th>
+                        <th class="p-4">Monto</th>
+                        <th class="p-4">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#282828] text-sm">
+                    {% for t in transacciones %}
+                    <tr>
+                        <td class="p-4 font-medium">{{ t.tipo }}</td>
+                        <td class="p-4 text-gray-300">{{ t.detalle }}</td>
+                        <td class="p-4 text-gray-400">{{ t.fecha }}</td>
+                        <td class="p-4 font-mono {% if t.monto > 0 %}text-green-400{% else %}text-red-400{% endif %}">${{ t.monto }} CLP</td>
+                        <td class="p-4"><span class="bg-green-900/30 text-green-400 px-2.5 py-1 rounded text-xs">{{ t.estado }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

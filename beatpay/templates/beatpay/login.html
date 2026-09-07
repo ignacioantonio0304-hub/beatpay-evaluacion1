@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>BeatPay Virtual - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white flex items-center justify-center h-screen">
+    <div class="bg-[#181818] p-8 rounded-xl shadow-2xl w-96 border border-[#282828]">
+        <h1 class="text-2xl font-bold text-center text-[#1DB954] mb-2">BeatPay Virtual</h1>
+        <p class="text-xs text-center text-gray-400 mb-6">Tu tarjeta digital para conciertos - Music Pro</p>
+        
+        <form action="{% url 'dashboard' %}" method="GET">
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">Correo Electrónico</label>
+                <input type="email" value="ignacio.hidalgo@musicpro.cl" class="w-full p-3 rounded bg-[#282828] text-white border border-gray-700 focus:outline-none focus:border-[#1DB954]" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm text-gray-300 mb-2">Contraseña</label>
+                <input type="password" value="123456" class="w-full p-3 rounded bg-[#282828] text-white border border-gray-700 focus:outline-none focus:border-[#1DB954]" required>
+            </div>
+            <button type="submit" class="w-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold p-3 rounded transition duration-200">
+                Ingresar al Sistema
+            </button>
+        </form>
+    </div>
+</body>
+</html>

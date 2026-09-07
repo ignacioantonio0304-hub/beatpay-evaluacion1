@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cargar Fondos - BeatPay Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white min-h-screen">
+    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
+        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
+        <a href="{% url 'dashboard' %}" class="text-sm bg-[#282828] px-4 py-2 rounded hover:bg-[#383838]">← Volver al Dashboard</a>
+    </nav>
+    <div class="max-w-md mx-auto mt-10 p-6 bg-[#181818] rounded-xl border border-[#282828]">
+        <h1 class="text-2xl font-bold mb-4 text-[#1DB954]">Cargar Fondos</h1>
+        <p class="text-sm text-gray-400 mb-6">Saldo actual: <strong class="text-white">${{ tarjeta.saldo }} CLP</strong></p>
+
+        {% if mensaje %}
+            <div class="bg-green-900/50 border border-green-500 text-green-300 p-3 rounded mb-4 text-sm">{{ mensaje }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">Monto a Cargar (CLP)</label>
+                <input type="number" name="monto" min="1000" step="500" placeholder="Ej. 10000" class="w-full p-3 rounded bg-[#282828] text-white border border-gray-700 focus:outline-none focus:border-[#1DB954]" required>
+            </div>
+            <button type="submit" class="w-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold p-3 rounded transition">
+                Confirmar Recarga
+            </button>
+        </form>
+    </div>
+</body>
+</html>

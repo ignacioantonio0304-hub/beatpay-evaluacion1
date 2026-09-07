@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - BeatPay Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
+        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
+        <div class="space-x-6 text-sm text-gray-300">
+            <a href="{% url 'dashboard' %}" class="hover:text-white font-semibold">Inicio</a>
+            <a href="{% url 'cartelera' %}" class="hover:text-white">Cartelera Eventos</a>
+            <a href="{% url 'historial' %}" class="hover:text-white">Historial de Pagos</a>
+        </div>
+        <div class="text-sm text-gray-400">Hola, <span class="text-white font-medium">{{ usuario.nombre }}</span> | <a href="{% url 'login' %}" class="text-red-400 hover:underline">Cerrar Sesión</a></div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="max-w-5xl mx-auto mt-10 p-6">
+        <h1 class="text-3xl font-bold mb-6">Panel Principal de Cuenta</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Tarjeta Virtual Visual -->
+            <div class="bg-gradient-to-r from-blue-900 to-purple-900 p-6 rounded-2xl shadow-xl border border-blue-500/30 relative">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-xs uppercase tracking-widest text-gray-300">Visa Digital Prepago</span>
+                    <span class="font-black italic text-lg">VISA</span>
+                </div>
+                <div class="text-xl tracking-widest font-mono mb-6">{{ tarjeta.numero }}</div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase">Titular</p>
+                        <p class="text-sm font-bold uppercase">{{ usuario.nombre }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase">Saldo Disponible</p>
+                        <p class="text-xl font-bold text-[#1DB954]">${{ tarjeta.saldo }} CLP</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Botones de Acción -->
+            <div class="flex flex-col space-y-4">
+                <a href="{% url 'detalle_tarjeta' %}" class="bg-[#282828] hover:bg-[#383838] p-4 rounded-xl font-medium text-center transition">
+                    🔍 Ver Detalle de Tarjeta y Estado
+                </a>
+                <a href="{% url 'cargar_fondos' %}" class="bg-[#1DB954] hover:bg-[#1ed760] text-black p-4 rounded-xl font-bold text-center transition">
+                    💵 Cargar Fondos en Moneda Local
+                </a>
+                <a href="{% url 'cartelera' %}" class="bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold text-center transition">
+                    🎸 Pagar Entradas en Concierto (Gira 2026)
+                </a>
+                <a href="{% url 'historial' %}" class="bg-[#282828] hover:bg-[#383838] p-4 rounded-xl font-medium text-center transition">
+                    📊 Consultar Historial de Transacciones
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
