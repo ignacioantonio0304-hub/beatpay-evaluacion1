@@ -27,7 +27,7 @@ Sistema de pagos digital y tarjeta virtual estilo Visa orientado a la administra
 * **Arquitectura:** Datos simulados (*Mock Data*) en memoria.     
 
 
-
+  
 
 
 
