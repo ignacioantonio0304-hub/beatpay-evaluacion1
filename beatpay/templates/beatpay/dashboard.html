@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - BeatPay Virtual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-zinc-900 border-b border-zinc-800 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-emerald-500 font-bold text-xl">🎵 BeatPay Virtual</span>
+        </div>
+        <div class="flex items-center space-x-6 text-sm font-medium">
+            <a href="{% url 'dashboard' %}" class="text-white hover:text-emerald-400">Inicio</a>
+            <a href="{% url 'cartelera' %}" class="text-zinc-400 hover:text-emerald-400">Cartelera Eventos</a>
+            <a href="{% url 'historial' %}" class="text-zinc-400 hover:text-emerald-400">Historial de Pagos</a>
+            <a href="{% url 'reportes' %}" class="text-emerald-400 font-bold hover:underline">📊 Reportes ORM</a>
+        </div>
+        <div class="text-xs text-zinc-400">
+            Hola, <span class="text-white font-semibold">{{ usuario.nombre }}</span> | 
+            <a href="{% url 'logout' %}" class="text-rose-400 hover:underline">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Contenido -->
+    <div class="max-w-5xl mx-auto mt-10 px-4">
+        <h1 class="text-3xl font-extrabold mb-8 text-white">Panel Principal de Cuenta</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Tarjeta Virtual Interactiva -->
+            <a href="{% url 'detalle_tarjeta' %}" class="block group">
+                <div class="bg-gradient-to-tr from-purple-900 via-indigo-950 to-zinc-900 p-6 rounded-2xl border border-purple-800/50 shadow-2xl relative overflow-hidden transform group-hover:scale-105 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-10">
+                        <span class="text-xs font-mono tracking-widest text-purple-300 uppercase">Visa Digital Prepago</span>
+                        <span class="font-extrabold italic text-xl tracking-wider text-white">VISA</span>
+                    </div>
+                    <div class="font-mono text-xl text-zinc-200 tracking-widest mb-6">
+                        {{ tarjeta.numero }}
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-wider text-zinc-400">Titular</p>
+                            <p class="font-bold text-sm tracking-wide uppercase text-white">{{ usuario.nombre }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] uppercase tracking-wider text-zinc-400">Saldo Disponible</p>
+                            <p class="font-extrabold text-emerald-400 text-lg">${{ tarjeta.saldo }} CLP</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Acciones Rápidas -->
+            <div class="space-y-4">
+                <a href="{% url 'detalle_tarjeta' %}" class="w-full py-4 px-6 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                    <span>🔍 Ver Detalle de Tarjeta y Estado</span>
+                </a>
+                <a href="{% url 'cargar_fondos' %}" class="w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-950">
+                    <span>💵 Cargar Fondos en Moneda Local</span>
+                </a>
+                <a href="{% url 'cartelera' %}" class="w-full py-4 px-6 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                    <span>🎸 Pagar Entradas en Concierto (Gira 2026)</span>
+                </a>
+                <a href="{% url 'historial' %}" class="w-full py-4 px-6 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white rounded-xl font-bold flex items-center justify-center space-x-2 transition">
+                    <span>📊 Consultar Historial de Transacciones</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>BeatPay - Reportes del Sistema</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121212] text-white font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar de Navegación -->
+        <div class="w-64 bg-[#181818] border-r border-[#282828] p-6 flex flex-col justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-[#1DB954] mb-6">BeatPay Virtual</h1>
+                <nav class="space-y-3 text-sm">
+                    <a href="{% url 'dashboard' %}" class="block py-2 px-3 rounded hover:bg-[#282828] text-gray-300">Dashboard</a>
+                    <a href="{% url 'detalle_tarjeta' %}" class="block py-2 px-3 rounded hover:bg-[#282828] text-gray-300">Mi Tarjeta</a>
+                    <a href="{% url 'cargar_fondos' %}" class="block py-2 px-3 rounded hover:bg-[#282828] text-gray-300">Cargar Fondos</a>
+                    <a href="{% url 'cartelera' %}" class="block py-2 px-3 rounded hover:bg-[#282828] text-gray-300">Cartelera Eventos</a>
+                    <a href="{% url 'historial' %}" class="block py-2 px-3 rounded hover:bg-[#282828] text-gray-300">Historial Local</a>
+                    <a href="{% url 'reportes' %}" class="block py-2 px-3 rounded bg-[#282828] text-[#1DB954] font-semibold">Reportes ORM</a>
+                </nav>
+            </div>
+            <div>
+                <a href="{% url 'logout' %}" class="block text-center w-full bg-red-600/20 text-red-400 border border-red-600/30 p-2 rounded text-sm hover:bg-red-600/30">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <header class="mb-8">
+                <h2 class="text-2xl font-bold">Reportes del Sistema (Django ORM)</h2>
+                <p class="text-sm text-gray-400">Resultados de consultas analíticas y transaccionales en tiempo real.</p>
+            </header>
+
+            <!-- Tarjetas de Resumen Estadístico -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-[#181818] p-6 rounded-xl border border-[#282828]">
+                    <h3 class="text-gray-400 text-sm mb-1">Tarjetas Activas</h3>
+                    <p class="text-3xl font-bold text-[#1DB954]">{{ tarjetas_activas_count }}</p>
+                </div>
+                <div class="bg-[#181818] p-6 rounded-xl border border-[#282828]">
+                    <h3 class="text-gray-400 text-sm mb-1">Monto Promedio Completado</h3>
+                    <p class="text-3xl font-bold text-blue-400">${{ promedio_completadas|floatformat:0 }}</p>
+                </div>
+                <div class="bg-[#181818] p-6 rounded-xl border border-[#282828]">
+                    <h3 class="text-gray-400 text-sm mb-1">% Operaciones Internas</h3>
+                    <p class="text-3xl font-bold text-purple-400">{{ porcentaje_internas }}%</p>
+                </div>
+            </div>
+
+            <!-- Tablas de Reportes Detallados -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Últimos Movimientos -->
+                <div class="bg-[#181818] p-6 rounded-xl border border-[#282828]">
+                    <h3 class="text-lg font-semibold mb-4">Últimos Movimientos Registrados</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-300">
+                            <thead class="bg-[#282828] text-xs uppercase text-gray-400">
+                                <tr>
+                                    <th class="p-3">Monto</th>
+                                    <th class="p-3">Estado</th>
+                                    <th class="p-3">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mov in ultimos_movimientos %}
+                                <tr class="border-b border-[#282828]">
+                                    <td class="p-3 font-bold text-white">${{ mov.monto }}</td>
+                                    <td class="p-3">
+                                        <span class="px-2 py-1 rounded text-xs bg-green-500/20 text-green-300">{{ mov.estado }}</span>
+                                    </td>
+                                    <td class="p-3 text-gray-400">{{ mov.fecha|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="p-3 text-center text-gray-500">No hay movimientos registrados.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Clientes Registrados -->
+                <div class="bg-[#181818] p-6 rounded-xl border border-[#282828]">
+                    <h3 class="text-lg font-semibold mb-4">Clientes en el Sistema</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-300">
+                            <thead class="bg-[#282828] text-xs uppercase text-gray-400">
+                                <tr>
+                                    <th class="p-3">Nombre</th>
+                                    <th class="p-3">RUT</th>
+                                    <th class="p-3">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cli in clientes %}
+                                <tr class="border-b border-[#282828]">
+                                    <td class="p-3 text-white font-medium">{{ cli.nombre }}</td>
+                                    <td class="p-3 text-gray-400">{{ cli.rut }}</td>
+                                    <td class="p-3 text-gray-400">{{ cli.email }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="p-3 text-center text-gray-500">No hay clientes creados.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
