@@ -2,30 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cartelera Eventos - BeatPay Virtual</title>
+    <title>Cartelera - BeatPay Virtual</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#121212] text-white min-h-screen">
-    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
-        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
-        <a href="{% url 'dashboard' %}" class="text-sm bg-[#282828] px-4 py-2 rounded hover:bg-[#383838]">← Volver al Dashboard</a>
-    </nav>
-    <div class="max-w-4xl mx-auto mt-10 p-6">
-        <h1 class="text-3xl font-bold mb-2">Cartelera Music Pro Tour 2026</h1>
-        <p class="text-gray-400 mb-6">Selecciona un concierto para pagar directamente con tu tarjeta BeatPay Virtual.</p>
+<body class="bg-zinc-950 text-white min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-emerald-400">Cartelera Music Pro Tour 2026</h1>
+            <a href="{% url 'dashboard' %}" class="bg-zinc-800 px-4 py-2 rounded hover:bg-zinc-700">← Volver al Dashboard</a>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% for evento in eventos %}
-            <div class="bg-[#181818] p-6 rounded-xl border border-[#282828] flex flex-col justify-between">
-                <div>
-                    <h2 class="font-bold text-lg mb-2 text-white">{{ evento.nombre }}</h2>
-                    <p class="text-xs text-gray-400 mb-4">📅 Fecha: {{ evento.fecha }}</p>
-                    <p class="text-xl font-bold text-[#1DB954] mb-6">${{ evento.precio }} CLP</p>
+                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-semibold bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded">{{ evento.fecha }}</span>
+                        <h3 class="text-xl font-semibold mt-3 mb-2">{{ evento.nombre }}</h3>
+                        <p class="text-zinc-400 text-sm mb-4">{{ evento.descripcion }}</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-4 border-t border-zinc-800">
+                        <span class="text-emerald-400 font-bold text-lg">${{ evento.precio }} CLP</span>
+                        <!-- Enlace directo a simular_pago con el ID del evento -->
+                        <a href="{% url 'simular_pago' evento.id %}" class="bg-emerald-600 px-4 py-2 rounded text-sm font-semibold hover:bg-emerald-500 transition-colors">Comprar Entrada</a>
+                    </div>
                 </div>
-                <a href="{% url 'simular_pago' evento.id %}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-center transition">
-                    🎸 Pagar Entrada
-                </a>
-            </div>
             {% endfor %}
         </div>
     </div>

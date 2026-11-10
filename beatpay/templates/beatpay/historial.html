@@ -2,36 +2,40 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Historial de Pagos - BeatPay Virtual</title>
+    <title>Historial - BeatPay Virtual</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#121212] text-white min-h-screen">
-    <nav class="bg-[#181818] border-b border-[#282828] p-4 flex justify-between items-center px-8">
-        <div class="font-bold text-lg text-[#1DB954]">🎵 BeatPay Virtual</div>
-        <a href="{% url 'dashboard' %}" class="text-sm bg-[#282828] px-4 py-2 rounded hover:bg-[#383838]">← Volver al Dashboard</a>
-    </nav>
-    <div class="max-w-4xl mx-auto mt-10 p-6">
-        <h1 class="text-3xl font-bold mb-6">Historial de Transacciones</h1>
-        <div class="bg-[#181818] rounded-xl border border-[#282828] overflow-hidden">
+<body class="bg-zinc-950 text-white min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-emerald-400">Historial de Transacciones</h1>
+            <a href="{% url 'dashboard' %}" class="bg-zinc-800 px-4 py-2 rounded hover:bg-zinc-700">← Volver al Dashboard</a>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#222222] text-gray-400 text-sm border-b border-[#282828]">
-                        <th class="p-4">Tipo</th>
-                        <th class="p-4">Detalle / Comercio</th>
+                    <tr class="border-b border-zinc-800 text-zinc-400 text-sm">
+                        <th class="p-4">ID Transacción</th>
+                        <th class="p-4">Detalle / Operación</th>
                         <th class="p-4">Fecha</th>
                         <th class="p-4">Monto</th>
                         <th class="p-4">Estado</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#282828] text-sm">
-                    {% for t in transacciones %}
-                    <tr>
-                        <td class="p-4 font-medium">{{ t.tipo }}</td>
-                        <td class="p-4 text-gray-300">{{ t.detalle }}</td>
-                        <td class="p-4 text-gray-400">{{ t.fecha }}</td>
-                        <td class="p-4 font-mono {% if t.monto > 0 %}text-green-400{% else %}text-red-400{% endif %}">${{ t.monto }} CLP</td>
-                        <td class="p-4"><span class="bg-green-900/30 text-green-400 px-2.5 py-1 rounded text-xs">{{ t.estado }}</span></td>
-                    </tr>
+                <tbody>
+                    {% for mov in movimientos %}
+                        <tr class="border-b border-zinc-800/50 hover:bg-zinc-800/30">
+                            <td class="p-4 text-sm font-mono text-zinc-300">#{{ mov.id }}</td>
+                            <td class="p-4 text-sm text-zinc-300">{% if mov.referencia_operacion %}{{ mov.referencia_operacion }}{% else %}Recarga de Fondos{% endif %}</td>
+                            <td class="p-4 text-sm text-zinc-400">{% if mov.fecha %}{{ mov.fecha }}{% else %}Reciente{% endif %}</td>
+                            <td class="p-4 text-sm font-semibold text-emerald-400">+${{ mov.monto }} CLP</td>
+                            <td class="p-4 text-sm"><span class="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-xs">{{ mov.estado }}</span></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="p-8 text-center text-zinc-500">No hay transacciones registradas todavía. ¡Realiza una recarga para ver el monto aquí!</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

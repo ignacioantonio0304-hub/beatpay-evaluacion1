@@ -1,58 +1,87 @@
 import os
 import sys
 import django
+from decimal import Decimal
+from faker import Faker
 
-# Agregamos la carpeta raíz del proyecto (ev1) al path de Python
+# Añadir el directorio raíz del proyecto al path para reconocer 'musicpro_project'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Configuramos el entorno de Django
+# Configurar entorno de Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'musicpro_project.settings')
 django.setup()
 
-from faker import Faker
-from django.contrib.auth.models import User
-import random
-from beatpay.models import TarjetaVirtual, Transaccion
+from beatpay.models import Cliente, Tarjeta, InstrumentoFinanciero, Movimiento
 
-fake = Faker('es_CL') # Datos adaptados a Chile
+fake = Faker('es_CL')
 
-def ejecutar_carga(cantidad=100):
-    print(f"Generando {cantidad} registros de prueba para BeatPay...")
-    
-    for _ in range(cantidad):
-        # Crear un usuario ficticio
-        username = fake.user_name() + str(random.randint(1000, 9999))
-        email = fake.email()
-        user = User.objects.create_user(username=username, email=email, password='password123')
+def calcular_dv(rut_num):
+    """Calcula el dígito verificador oficial de un RUT chileno."""
+    s = 0
+    m = 2
+    for d in reversed(str(rut_num)):
+        s += int(d) * m
+        m = m + 1 if m < 7 else 2
+    res = 11 - (s % 11)
+    if res == 11:
+        return '0'
+    elif res == 10:
+        return 'K'
+    return str(res)
+
+def generar_rut_unico(i):
+    """Genera un RUT único secuencial basado en el índice i."""
+    rut_num = 5000000 + i
+    dv = calcular_dv(rut_num)
+    # Formatear con puntos y guion (ej: 5.000.001-K)
+    rut_str = f"{rut_num:,}".replace(",", ".")
+    return f"{rut_str}-{dv}"
+
+def poblar_base_datos(cantidad=10000):
+    print(f"🚀 Generando {cantidad} usuarios falsos para BeatPay...")
+
+    for i in range(1, cantidad + 1):
+        nombre = fake.name()
+        email = f"usuario_{i}_{fake.word()}@musicpro.cl"
+        rut = generar_rut_unico(i)
         
-        # Crear su tarjeta virtual asociada
-        num_tarjeta = ''.join([str(random.randint(0, 9)) for _ in range(16)])
-        cvv = str(random.randint(100, 999))
-        saldo = round(random.uniform(5000.0, 500000.0), 2)
-        
-        tarjeta = TarjetaVirtual.objects.create(
-            usuario=user,
-            numero_tarjeta=num_tarjeta,
-            saldo=saldo,
-            cvv=cvv,
-            fecha_expiracion="12/28",
-            activa=True
+        cliente = Cliente.objects.create(
+            nombre=nombre,
+            email=email,
+            rut=rut,
+            activo=True
         )
+
+        # 2. Crear Tarjeta y Saldo Inicial
+        saldo_inicial = Decimal(str(fake.random_int(min=10000, max=150000)))
         
-        # Crear algunas transacciones para esta tarjeta
-        for _ in range(random.randint(1, 3)):
-            tipo_trx = random.choice(['carga', 'pago'])
-            monto_trx = round(random.uniform(1000.0, 50000.0), 2)
-            comercio = "Concierto Gira 2026" if tipo_trx == 'pago' else "Carga de Fondos BeatPay"
-            
-            Transaccion.objects.create(
-                tarjeta=tarjeta,
-                tipo=tipo_trx,
-                monto=monto_trx,
-                comercio_destino=comercio
-            )
-            
-    print(f"¡Carga de {cantidad} datos completada con éxito!")
+        tarjeta = Tarjeta.objects.create(
+            cliente=cliente,
+            saldo=saldo_inicial
+        )
+
+        # Obtener la instancia de InstrumentoFinanciero vinculada
+        inst_financiero = InstrumentoFinanciero.objects.filter(id=tarjeta.id).first()
+        if not inst_financiero:
+            inst_financiero = InstrumentoFinanciero.objects.last()
+
+        # 3. Crear Movimientos de Prueba
+        if inst_financiero:
+            for _ in range(fake.random_int(min=1, max=2)):
+                monto_mov = Decimal(str(fake.random_int(min=5000, max=25000)))
+                Movimiento.objects.create(
+                    tarjeta_uuid_origen=inst_financiero,
+                    tarjeta_uuid_destino=inst_financiero,
+                    monto=monto_mov,
+                    estado='Completado',
+                    referencia_operacion=f'REF-TEST-{fake.random_int(min=100, max=999)}'
+                )
+
+        # Mensaje de progreso cada 1000 registros
+        if i % 1000 == 0:
+            print(f"-> Generados {i} de {cantidad} usuarios...")
+
+    print(f"¡Éxito! Se han generado {cantidad} clientes con sus respectivas tarjetas y movimientos.")
 
 if __name__ == '__main__':
-    ejecutar_carga(100)
+    poblar_base_datos(10000)
