@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.db.models import Avg
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -91,7 +92,26 @@ def historial_view(request):
 
 @login_required
 def reportes_view(request):
-    return render(request, 'beatpay/reportes.html')
+    cliente_obj = Cliente.objects.filter(email=request.user.email).first()
+    tarjeta = Tarjeta.objects.filter(cliente=cliente_obj).first() if cliente_obj else None
+    
+    # Consultas analíticas mediante Django ORM
+    total_tarjetas = Tarjeta.objects.count()
+    
+    movimientos_completados = Movimiento.objects.filter(estado='Completado')
+    promedio_monto = movimientos_completados.aggregate(Avg('monto'))['monto__avg'] or 0
+    
+    ultimos_movimientos = Movimiento.objects.all().order_by('-id')[:5]
+    clientes = Cliente.objects.all().order_by('-id')[:5]
+    
+    context = {
+        'tarjeta': tarjeta,
+        'total_tarjetas': total_tarjetas,
+        'promedio_monto': round(promedio_monto, 2),
+        'ultimos_movimientos': ultimos_movimientos,
+        'clientes': clientes,
+    }
+    return render(request, 'beatpay/reportes.html', context)
 
 @login_required
 def detalle_tarjeta_view(request):
@@ -114,7 +134,6 @@ def cargar_fondos_view(request):
                 
                 inst_financiero, _ = InstrumentoFinanciero.objects.get_or_create(id=tarjeta.id)
                 
-                # Asignamos origen y destino para evitar errores de columna nula
                 Movimiento.objects.create(
                     tarjeta_uuid_origen=inst_financiero,
                     tarjeta_uuid_destino=inst_financiero,
@@ -156,7 +175,6 @@ def simular_pago_view(request, evento_id=None):
             
             inst_financiero, _ = InstrumentoFinanciero.objects.get_or_create(id=tarjeta.id)
             
-            # Asignamos origen y destino para cumplir con la restricción de la base de datos
             Movimiento.objects.create(
                 tarjeta_uuid_origen=inst_financiero,
                 tarjeta_uuid_destino=inst_financiero,
